@@ -1,0 +1,385 @@
+# POC Success Criteria - Consolidated
+
+**Vendors**: Noma Security, Palo Alto AIRS, Aim Security  
+**Duration**: 8 weeks  
+**Pass Threshold**: All CRITICAL + ≥70% IMPORTANT
+
+---
+
+## CRITICAL SUCCESS CRITERIA (Must Pass All 10)
+
+| # | Validation Area | Success Criteria | Test Method | Measurement |
+|---|----------------|------------------|-------------|-------------|
+| 1 | **Agent/Tool/Shadow Discovery** | Detect 100% within 24 hours | Deploy 5 agents, 10 tools, 3 shadow AI tools | Detection count / 18 total |
+| 2 | **Browser Interception** | Intercept ChatGPT/Copilot/Gemini via extensions | Install Chrome/Edge/Firefox extensions, test interception | 3 browsers working |
+| 3 | **Network Interception** | Intercept AI traffic via ZScaler/proxy | Configure proxy, test API traffic interception | Proxy integration working |
+| 4 | **Guardrails (Runtime)** | Block ≥90% adversarial prompts <500ms | Test 100 attacks (injection, jailbreak, toxic) | Block rate + latency |
+| 5 | **Guardrails (Design)** | Create/test policies via UI without code | Create 5 policies via UI, simulate before deploy | UI policy editor working |
+| 6 | **DLP** | Detect/block ≥95% PII/PHI | Test 50 prompts with PII | Detection rate |
+| 7 | **Observability (Metrics)** | Real-time dashboard shows latency/throughput/errors | Review dashboard during load test | Dashboard updating live |
+| 8 | **Observability (Logs/Traces)** | 100% telemetry to SIEM with full context | Send 1000 events, verify SIEM ingestion | Ingestion rate |
+| 9 | **Deployment** | Deploy successfully in dev/test/prod | Deploy 3 isolated environments | All 3 environments working |
+| 10 | **AgentRuntime (Isolation)** | Multi-tenant agent separation | Create 2 tenants, verify data isolation | 100% isolated |
+
+**Result**: ____/10 passed (Required: 10/10)
+
+---
+
+## IMPORTANT SUCCESS CRITERIA (Must Pass ≥8 of 11)
+
+| # | Validation Area | Success Criteria | Test Method | Measurement |
+|---|----------------|------------------|-------------|-------------|
+| 1 | **Discovery Context** | Capture what agents access and why | Execute 20 agent tasks, verify context logged | Context completeness |
+| 2 | **Discovery Risk Scoring** | Auto-assign risk scores to discovered assets | Review 10 discovered assets, verify risk scores | Scoring present |
+| 3 | **SSL/TLS Inspection** | Decrypt and inspect HTTPS AI traffic | Test encrypted traffic, verify policy enforcement | Inspection working |
+| 4 | **Policy Versioning** | Track changes with rollback capability | Make 5 policy changes, rollback 1 change | Version control working |
+| 5 | **Policy Simulation** | Test policy before production | Simulate 10 prompts against draft policy | Simulation accurate |
+| 6 | **Observability (Tracing)** | End-to-end trace for agent workflows | Execute multi-step workflow, verify trace | Full trace captured |
+| 7 | **Observability (Alerting)** | <5 false positive alerts per day | Monitor 7 days production-like traffic | FP count |
+| 8 | **Observability (Forensics)** | Incident timeline available <5 minutes | Trigger incident, measure forensic data access | Time to forensics |
+| 9 | **Deployment (Multi-cloud)** | Deploy across AWS + Azure | Deploy in 2 clouds, verify unified management | Both clouds working |
+| 10 | **Deployment (IaC)** | Infrastructure-as-Code deployment | Deploy using Terraform/CloudFormation | IaC successful |
+| 11 | **AgentRuntime (Lifecycle)** | Start/stop/pause/resume agents | Test agent lifecycle operations | All operations work |
+
+**Result**: ____/11 passed (Required: ≥8/11)
+
+---
+
+## SECONDARY CRITERIA (Nice to Have - For Ranking)
+
+| # | Validation Area | Success Criteria | Test Method |
+|---|----------------|------------------|-------------|
+| 1 | **Discovery (Shadow AI Variants)** | Detect browser extensions, mobile apps, desktop apps | Test 5 shadow AI variants | 
+| 2 | **Policy Approval Workflow** | Policy changes require approval | Submit policy, verify approval workflow |
+| 3 | **Policy Staged Rollout** | Deploy dev → test → prod safely | Test staged deployment |
+| 4 | **Observability (Anomaly Detection)** | ML-based anomaly detection | Simulate 5 anomalies, verify detection |
+| 5 | **Deployment (Air-gapped)** | On-prem deployment without internet | Deploy in isolated environment (if required) |
+| 6 | **Deployment (Auto-scaling)** | Scale from 100 → 10,000 req/min | Load test scaling behavior |
+| 7 | **AgentRuntime (State Persistence)** | Agent state survives restart | Stop agent mid-task, restart, verify context |
+| 8 | **AgentRuntime (Resource Limits)** | CPU/memory quotas enforced | Configure limits, test enforcement |
+| 9 | **AgentRuntime (Debugging)** | Runtime inspection and logging | Debug running agent, verify tools available |
+| 10 | **Performance (Combined)** | <10% latency with all features enabled | Load test with browser + network + policies |
+
+**Result**: ____/10 passed (Used for vendor ranking if multiple pass)
+
+---
+
+## PASS/FAIL DECISION
+
+```
+CRITICAL Score: ____ / 10  (Required: 10/10)
+IMPORTANT Score: ____ / 11  (Required: ≥8/11)
+
+Decision:
+□ PASS - All 10 CRITICAL + ≥8 IMPORTANT met
+□ CONDITIONAL PASS - All 10 CRITICAL + 6-7 IMPORTANT (vendor commits to fix)
+□ FAIL - Any CRITICAL failed OR <6 IMPORTANT passed
+```
+
+---
+
+## DETAILED VALIDATION BY AREA
+
+### 1. AGENT/TOOL/SHADOW DISCOVERY & DETECTION
+
+**Purpose**: Verify comprehensive visibility into all AI usage
+
+| Test | What to Deploy | Expected Result | Pass/Fail |
+|------|----------------|-----------------|-----------|
+| **Agent Discovery** | 5 agents: Custom OpenAI agent, LangChain agent, AutoGPT, commercial agent, shadow autonomous agent | All 5 detected in dashboard within 24h | □ |
+| **Tool Discovery** | Agent with 10 tools: web search, database, file system, API, email, Slack, calculator, browser automation, SSH, custom tool | All 10 tools mapped with permissions | □ |
+| **Shadow AI Detection** | 3 shadow tools: Personal ChatGPT account, Claude.ai, unauthorized browser extension | All 3 detected as unauthorized | □ |
+| **Context Capture** | Execute 20 agent tasks across different users | Full context logged: user, prompt, tools used, data accessed | □ |
+| **Risk Scoring** | Review 10 discovered assets | Each has risk score (high/medium/low) with justification | □ |
+
+**Critical**: Agent + Tool + Shadow detection (3 tests)  
+**Important**: Context + Risk scoring (2 tests)
+
+---
+
+### 2. BROWSER & NETWORK INTERCEPTION
+
+**Purpose**: Intercept AI traffic at multiple layers
+
+| Test | Configuration | Expected Result | Pass/Fail |
+|------|---------------|-----------------|-----------|
+| **Chrome Extension** | Install extension, access ChatGPT | Traffic intercepted, policies enforced | □ |
+| **Edge Extension** | Install extension, access Copilot | Traffic intercepted, policies enforced | □ |
+| **Firefox Extension** | Install extension, access Gemini | Traffic intercepted, policies enforced | □ |
+| **ZScaler/Proxy** | Configure network proxy, send API requests | API traffic intercepted, policies enforced | □ |
+| **SSL Inspection** | Test HTTPS traffic with certificate | Encrypted traffic decrypted and inspected | □ |
+| **Unified Policies** | Same DLP policy on browser + network | Both intercept PII consistently | □ |
+| **Performance** | Load test: 1000 browser + 1000 API req/min | <10% latency overhead | □ |
+
+**Critical**: Browser (Chrome/Edge/Firefox) + Network + SSL (4 tests)  
+**Important**: Unified policies + Performance (2 tests)
+
+---
+
+### 3. GUARDRAILS & POLICIES (DESIGN + RUNTIME)
+
+**Purpose**: Full policy lifecycle from authoring to enforcement
+
+#### Design-Time Tests
+
+| Test | Action | Expected Result | Pass/Fail |
+|------|--------|-----------------|-----------|
+| **UI Policy Editor** | Create 5 policies via UI (no code): PII block, competitor block, toxic filter, code injection, data exfil | All 5 policies created and functional | □ |
+| **Policy Templates** | Use 3 pre-built templates, customize | Templates work, customization saves | □ |
+| **Policy Simulation** | Simulate 10 test prompts against draft policy | Results match expected (block/allow) | □ |
+| **Policy Versioning** | Create policy v1 → Update to v2 → Rollback to v1 | Version history tracked, rollback works | □ |
+| **Policy Approval** | Submit policy for approval, track workflow | Approval notification sent, workflow tracked | □ |
+
+#### Runtime Tests
+
+| Test | Attack Type | Expected Result | Pass/Fail |
+|------|-------------|-----------------|-----------|
+| **Prompt Injection** | 30 variants (ignore instructions, reveal system, override) | ≥27 blocked (90%) <500ms | □ |
+| **Jailbreak** | 30 variants (developer mode, role play, hypothetical) | ≥27 blocked (90%) <500ms | □ |
+| **Toxic Content** | 20 prompts (hate speech, violence, harm) | ≥17 blocked (85%) | □ |
+| **Malicious Code** | 20 code injection attempts (SQL, XSS, command) | ≥18 blocked (90%) | □ |
+| **Overall Runtime** | 100 total adversarial prompts | ≥90 blocked <500ms average | □ |
+
+**Critical**: UI Editor + Runtime enforcement (2 tests)  
+**Important**: Simulation + Versioning + Individual attack detection (4 tests)
+
+---
+
+### 4. OBSERVABILITY (METRICS, LOGS, TRACES, ALERTS, FORENSICS)
+
+**Purpose**: Comprehensive visibility into operations and security
+
+| Test | Component | Expected Result | Pass/Fail |
+|------|-----------|-----------------|-----------|
+| **Metrics Dashboard** | Review dashboard during load test | Real-time metrics: req/sec, latency (p50/p95/p99), errors, violations | □ |
+| **Contextual Logs** | Review 20 log entries | Each has: user, session, prompt, response, decision, timestamp | □ |
+| **SIEM Integration** | Send 1000 events to Splunk/Sentinel | 100% ingested within 5 minutes, searchable | □ |
+| **Distributed Tracing** | Execute multi-step agent workflow (5 steps) | Full trace: User → Agent → Tool1 → Tool2 → LLM → Response | □ |
+| **Smart Alerting** | Monitor 7 days production-like traffic | <5 false positive alerts per day | □ |
+| **Forensic Timeline** | Trigger DLP violation incident | Full timeline available <5 minutes: who, what, when, where, why | □ |
+| **Anomaly Detection** | Simulate 5 anomalies (rate spike, unusual pattern) | ≥4 detected and alerted (80%) | □ |
+
+**Critical**: Metrics + Logs/SIEM (3 tests)  
+**Important**: Tracing + Alerting + Forensics (3 tests)  
+**Secondary**: Anomaly detection (1 test)
+
+---
+
+### 5. DEPLOYMENT (MODELS, AUTOMATION, OPERATIONS)
+
+**Purpose**: Validate deployment flexibility and operational readiness
+
+#### Deployment Models
+
+| Test | Configuration | Expected Result | Pass/Fail |
+|------|---------------|-----------------|-----------|
+| **Multi-Environment** | Deploy dev, test, prod | All 3 environments working, policies isolated | □ |
+| **Control Plane** | Verify SaaS or on-prem option available | Required control plane supported | □ |
+| **Runtime Plane** | Verify agentless or inline option available | Required runtime plane supported | □ |
+| **Data Plane** | Verify where AI traffic flows | Customer VPC or acceptable data residency | □ |
+| **Multi-Cloud** | Deploy in AWS + Azure | Both deployments working, unified dashboard | □ |
+| **Air-gapped** | Deploy on-prem without internet (if required) | Deployment successful in isolated network | □ |
+
+#### Deployment Operations
+
+| Test | Action | Expected Result | Pass/Fail |
+|------|--------|-----------------|-----------|
+| **IaC Deployment** | Deploy using Terraform or CloudFormation | Deployment successful, config captured as code | □ |
+| **Deployment Time** | Measure end-to-end deployment | Agentless: <5 days, Inline: <14 days | □ |
+| **Configuration Complexity** | Count required config parameters | <20 parameters for basic deployment | □ |
+| **Auto-scaling** | Load test: 100 → 1000 → 10,000 req/min | System scales without intervention | □ |
+| **Backup/Restore** | Backup config, delete, restore | Configuration restored, system functional | □ |
+
+**Critical**: Multi-environment (1 test)  
+**Important**: Multi-cloud + IaC (2 tests)  
+**Secondary**: Air-gapped + Auto-scaling + Backup (3 tests)
+
+---
+
+### 6. AGENTRUNTIME (LIFECYCLE, ISOLATION, STATE, RESOURCES)
+
+**Purpose**: Validate agent execution environment management
+
+| Test | Action | Expected Result | Pass/Fail |
+|------|--------|-----------------|-----------|
+| **Multi-tenant Isolation** | Create Tenant A (Agent 1) + Tenant B (Agent 2) | Agent 1 cannot access Agent 2's data, 100% isolated | □ |
+| **Agent Lifecycle - Start** | Start new agent | Agent transitions to "running" state | □ |
+| **Agent Lifecycle - Stop** | Stop running agent | Agent transitions to "stopped" state | □ |
+| **Agent Lifecycle - Pause** | Pause running agent mid-task | Agent transitions to "paused" state | □ |
+| **Agent Lifecycle - Resume** | Resume paused agent | Agent continues from pause point | □ |
+| **State Persistence** | Stop agent mid-conversation, restart | Conversation context retained after restart | □ |
+| **Resource Limits** | Configure 1GB RAM limit, exceed limit | Agent stopped or throttled when limit reached | □ |
+| **Session Context** | Execute 10-turn conversation | Agent maintains context across all 10 turns | □ |
+| **Debugging Tools** | Debug running agent | Access real-time logs, traces, state inspection | □ |
+| **Error Handling** | Trigger agent error (API failure) | Agent fails gracefully, error logged, no data loss | □ |
+
+**Critical**: Multi-tenant isolation (1 test)  
+**Important**: Lifecycle operations (4 tests)  
+**Secondary**: State persistence + Resource limits + Debugging (3 tests)
+
+---
+
+## POC EXECUTION TIMELINE
+
+### Week 1-2: Deployment & Setup
+- Deploy dev, test, prod environments ✓ Deployment CRITICAL
+- Install browser extensions (Chrome, Edge, Firefox) ✓ Interception CRITICAL
+- Configure network proxy (ZScaler or equivalent) ✓ Interception CRITICAL
+- Setup SIEM integration ✓ Observability CRITICAL
+- Configure multi-tenant isolation ✓ AgentRuntime CRITICAL
+
+**Checkpoint**: 5 CRITICAL criteria validated
+
+---
+
+### Week 3-4: Discovery & Interception
+- Deploy 5 agents + 10 tools + 3 shadow AI ✓ Discovery CRITICAL
+- Test browser interception (3 browsers) ✓ Interception CRITICAL
+- Test network proxy interception ✓ Interception CRITICAL
+- Test SSL/TLS inspection ✓ Interception IMPORTANT
+- Verify unified policy enforcement ✓ Interception IMPORTANT
+- Test context capture ✓ Discovery IMPORTANT
+- Test risk scoring ✓ Discovery IMPORTANT
+
+**Checkpoint**: 3 CRITICAL + 4 IMPORTANT criteria validated
+
+---
+
+### Week 5-6: Guardrails & Policies
+- Create 5 policies via UI ✓ Guardrails CRITICAL
+- Test policy simulation ✓ Guardrails IMPORTANT
+- Test policy versioning ✓ Guardrails IMPORTANT
+- Execute 100 adversarial prompts ✓ Guardrails CRITICAL
+  - 30 prompt injection
+  - 30 jailbreak
+  - 20 toxic content
+  - 20 malicious code
+- Test 50 PII prompts ✓ DLP CRITICAL
+- Measure enforcement latency (<500ms)
+
+**Checkpoint**: 2 CRITICAL + 2 IMPORTANT criteria validated
+
+---
+
+### Week 7: Observability & AgentRuntime
+- Verify real-time metrics dashboard ✓ Observability CRITICAL
+- Test distributed tracing ✓ Observability IMPORTANT
+- Verify contextual logging + SIEM ✓ Observability CRITICAL
+- Monitor 7 days for false positives ✓ Observability IMPORTANT
+- Test forensic timeline (<5 min) ✓ Observability IMPORTANT
+- Test agent lifecycle operations ✓ AgentRuntime IMPORTANT
+- Test state persistence ✓ AgentRuntime SECONDARY
+- Test resource limits ✓ AgentRuntime SECONDARY
+
+**Checkpoint**: 2 CRITICAL + 4 IMPORTANT criteria validated
+
+---
+
+### Week 8: Performance & Final
+- Performance testing (all features enabled)
+- Verify <10% latency impact
+- Complete all SECONDARY tests
+- Calculate final scores
+- Vendor comparison and ranking
+- Final recommendation
+
+**Deliverable**: POC results, vendor scores, recommendation
+
+---
+
+## VENDOR SCORECARD TEMPLATE
+
+**Vendor Name**: _________________  
+**Test Period**: _______ to _______  
+
+### Critical Results (Must Pass All 10)
+
+| # | Criteria | Pass/Fail | Evidence |
+|---|----------|-----------|----------|
+| 1 | Agent/Tool/Shadow Discovery | □ PASS □ FAIL | 18/18 detected |
+| 2 | Browser Interception | □ PASS □ FAIL | 3/3 browsers |
+| 3 | Network Interception | □ PASS □ FAIL | Proxy working |
+| 4 | Guardrails (Runtime) | □ PASS □ FAIL | 92/100 blocked |
+| 5 | Guardrails (Design) | □ PASS □ FAIL | UI editor functional |
+| 6 | DLP | □ PASS □ FAIL | 48/50 detected (96%) |
+| 7 | Observability (Metrics) | □ PASS □ FAIL | Dashboard live |
+| 8 | Observability (Logs/Traces) | □ PASS □ FAIL | 1000/1000 ingested |
+| 9 | Deployment | □ PASS □ FAIL | 3/3 environments |
+| 10 | AgentRuntime (Isolation) | □ PASS □ FAIL | 100% isolated |
+
+**CRITICAL Score**: ___/10 (Required: 10/10)
+
+### Important Results (Must Pass ≥8 of 11)
+
+| # | Criteria | Pass/Fail | Notes |
+|---|----------|-----------|-------|
+| 1 | Discovery Context | □ PASS □ FAIL | |
+| 2 | Discovery Risk Scoring | □ PASS □ FAIL | |
+| 3 | SSL/TLS Inspection | □ PASS □ FAIL | |
+| 4 | Policy Versioning | □ PASS □ FAIL | |
+| 5 | Policy Simulation | □ PASS □ FAIL | |
+| 6 | Observability (Tracing) | □ PASS □ FAIL | |
+| 7 | Observability (Alerting) | □ PASS □ FAIL | |
+| 8 | Observability (Forensics) | □ PASS □ FAIL | |
+| 9 | Deployment (Multi-cloud) | □ PASS □ FAIL | |
+| 10 | Deployment (IaC) | □ PASS □ FAIL | |
+| 11 | AgentRuntime (Lifecycle) | □ PASS □ FAIL | |
+
+**IMPORTANT Score**: ___/11 (Required: ≥8/11)
+
+### Overall Result
+
+□ **PASS** - All 10 CRITICAL + ≥8 IMPORTANT  
+□ **CONDITIONAL PASS** - All 10 CRITICAL + 6-7 IMPORTANT  
+□ **FAIL** - Any CRITICAL failed OR <6 IMPORTANT
+
+---
+
+## VENDOR RANKING (If Multiple Pass)
+
+| Factor | Weight | Vendor A | Vendor B | Vendor C |
+|--------|--------|----------|----------|----------|
+| Performance (latency, throughput) | 25% | | | |
+| Deployment (time, complexity) | 20% | | | |
+| Discovery (accuracy, coverage) | 20% | | | |
+| Observability (quality, completeness) | 15% | | | |
+| Operational Fit (FP rate, usability) | 10% | | | |
+| Policy Management (ease of use) | 10% | | | |
+| **TOTAL** | **100%** | | | |
+
+**Winner**: Highest total score
+
+---
+
+## TEST DATA REQUIREMENTS
+
+### For Discovery
+- **5 Agents**: Custom OpenAI agent, LangChain agent, AutoGPT, commercial AI agent, shadow autonomous agent
+- **10 Tools**: Web search, PostgreSQL database, file system, REST API, email (SMTP), Slack API, calculator, browser automation, SSH, custom webhook
+- **3 Shadow AI**: Personal ChatGPT Plus account, Claude.ai personal account, unauthorized browser extension
+
+### For Interception
+- **Browsers**: Chrome, Edge, Firefox (latest versions)
+- **Proxy**: ZScaler, Netskope, or Palo Alto Prisma Access
+- **Certificate**: SSL/TLS inspection certificate
+
+### For Guardrails
+- **100 Adversarial Prompts**:
+  - 30 prompt injection variants
+  - 30 jailbreak attempts
+  - 20 toxic content prompts
+  - 20 malicious code requests
+
+### For DLP
+- **50 PII Prompts**:
+  - 10 with SSN
+  - 10 with credit cards
+  - 10 with emails
+  - 10 with phone numbers
+  - 10 with PHI (medical data)
+
+---
+
+**Document Version**: V2.0 Consolidated  
+**Last Updated**: January 2026  
+**Purpose**: POC execution with 6 integrated validation areas
