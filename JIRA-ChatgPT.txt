@@ -1,0 +1,141 @@
+1. Authentication & Authorization
+
+fmSSO (SAML 2.0) is the only trusted identity source; two independent SP trusts — ChatGPT and Atlassian — gated on separate AD groups.
+All Jira access runs as the end user via OAuth 2.1 with PKCE; no shared service account path when API tokens are disabled.
+Jira permission schemes enforce authorization; OAuth scopes are a ceiling, not a grant.
+User provisioning and deprovisioning ride SCIM, introducing a 30–40 min propagation lag.
+Admin onboarding requires two separate consents: ChatGPT workspace admin and Atlassian site admin.
+MFA enforcement lives at fmSSO only; weakness there compromises the whole chain.
+
+2. Ports, Protocols & Network Paths
+
+All traffic is HTTPS (TLS 1.2+); only outbound 443 required from the corporate perimeter.
+Critical FQDNs: chatgpt.com, auth.atlassian.com, mcp.atlassian.com, *.atlassian.net.
+Atlassian IP allowlist must include OpenAI's ChatGPT connector egress IPs, sourced directly from OpenAI.
+Rovo MCP domain allowlist should restrict connecting clients to chatgpt.com only.
+Corporate proxy/SSL-break cannot inspect the ChatGPT-to-MCP Bearer path (server-to-server, off-net).
+Deprecated /v1/sse endpoint retires 30 June 2026; standardize on /v1/mcp now.
+
+3. Credential Management
+
+Seven distinct credentials exist in the flow; only OAuth tokens live beyond a single transaction.
+OAuth access token: 1-hour Bearer, held in ChatGPT's backend vault, not customer-accessible.
+Refresh token rotates on every use, valid 90 days per rotation; token theft is partially self-healing.
+Revocation has up to a 60-minute tail; active access tokens survive fmSSO disablement until TTL.
+API-token authentication must stay disabled org-wide to force named-user OAuth on every call.
+OAuth client secret for the Rovo connector is held by OpenAI; customer cannot rotate it.
+
+4. Infrastructure, Data, Application & Operational Security
+
+Prompts, completions, and retrieved Jira content transit ChatGPT's infrastructure under Enterprise no-training terms.
+Rovo MCP is vendor-attested stateless; customer has no enforcement point for that claim.
+Data residency must align independently across both vendors — split residency is a compliance risk.
+Least privilege at Jira via per-project permission schemes bound to a read-only AD group is the primary app control.
+Quarterly review of ChatGPT connector tool allowlist is required as Atlassian adds new tools.
+Break-glass runbook must cover org-wide connector disable on both sides plus bulk consent revocation.
+
+5. Logging, Monitoring & Threat Model
+
+Two separate audit logs (Atlassian org + ChatGPT Compliance API) must be joined by user email in the SIEM.
+Atlassian audit log captures tool invocations but not prompt content; content visibility lives only on ChatGPT's side.
+Build alerts for runaway tool-call rates, off-hours writes, high-sensitivity project access, and 429 bursts.
+Primary threats: prompt injection via Jira content, confused-deputy, token theft, rate-limit DoS to tenant.
+No admin dashboard exists for Jira API quota consumption; 429s are your only signal.
+Revocation and scope-change events across both platforms must be monitored, not dropped silently.
+
+6. GenAI-Specific Security
+
+Prompt injection via retrieved Jira issue content is the top novel risk with no robust mitigation.
+Agent autonomy and scheduled tasks must be off by default; require admin approval per connector.
+Disable all write-capable tools in the ChatGPT connector unless there's a documented business need.
+Cross-connector data aggregation (Jira + Drive + Gmail in one prompt) bypasses per-system DLP.
+Jira data transits OpenAI infrastructure; data classification must gate which projects are in scope.
+OpenAI's no-training commitment is contractual, not technically enforced by the customer.
+
+7. Risks & Gaps
+
+No channel-aware permissions — user cannot be read-only in ChatGPT while read-write in browser.
+Revocation lag up to 60 minutes on active access tokens; incident response must account for this.
+No customer-tunable rate limiting; runaway agents can exhaust tenant-wide Jira quota.
+ChatGPT session cookie TTL is undocumented by OpenAI — get it in writing from your account team.
+Delete-operation restriction in Rovo is unconfirmed in official docs; do not rely on it as a control.
+Rovo MCP traffic isolation from shared Jira rate-limit pool is unclear; confirm with Atlassian TAM.
+OAuth client credentials managed entirely by OpenAI — supply-chain dependency with no customer rotation.
+
+
+Credential			Issuer	Lifetime	Storage
+SAML assertion				fmSSO	~5 min, single-use	Browser RAM (POST'd, discarded)
+ChatGPT session cookie	ChatGPT	Vendor-controlled, undocumented	Browser cookie jar
+Atlassian session cookie	auth.atlassian.com	Org session policy	Browser cookie jar
+OAuth authorization code	auth.atlassian.com	~60s, single-use	URL query param
+OAuth access token (Bearer)	auth.atlassian.com	3600 s Livelyapps	ChatGPT backend vault
+OAuth refresh token (rotating)	auth.atlassian.com	90 days per rotation Atlassian	ChatGPT backend vault
+
+
+
+
+
+````code ``````
+sequenceDiagram
+  autonumber
+  actor U as User (browser)
+  participant C as ChatGPT Ent.
+  participant F as fmSSO (PingFed)
+  participant A as auth.atlassian.com
+  participant M as Rovo MCP
+  participant J as Jira Cloud
+
+  rect rgba(83, 74, 183, 0.08)
+  Note over U,F: PHASE 1 - Login to ChatGPT (AD group GG-CHATGPT-USERS)
+  U->>C: GET chatgpt.com
+  C-->>U: 302 redirect to fmSSO (SAMLRequest, Audience=ChatGPT)
+  U->>F: Follow redirect
+  Note right of F: fmSSO checks user in<br/>GG-CHATGPT-USERS.<br/>Interactive auth if no<br/>fmSSO session exists
+  F-->>U: SAML Response (Assertion signed for ChatGPT)
+  Note over F,U: SAML assertion<br/>Issuer fmSSO<br/>Audience ChatGPT<br/>TTL ~5 min single-use<br/>Storage browser RAM
+  U->>C: POST /saml/acs (assertion)
+  C-->>U: Set-Cookie CHATGPT_SESSION
+  Note over U,C: ChatGPT session cookie<br/>Domain chatgpt.com<br/>TTL vendor-controlled<br/>Storage browser cookie jar
+  end
+
+  rect rgba(15, 110, 86, 0.08)
+  Note over U,A: PHASE 2 - Connect Rovo connector (AD group GG-JIRA-USERS)
+  U->>C: Click Connect on Rovo (sends CHATGPT_SESSION)
+  C-->>U: 302 to auth.atlassian.com/authorize (client_id, scope, state, PKCE challenge)
+  U->>A: GET /authorize
+  A-->>U: 302 to fmSSO (no atlassian.com cookie)
+  U->>F: Follow redirect (SAMLRequest, Audience=Atlassian)
+  Note right of F: fmSSO checks user in<br/>GG-JIRA-USERS.<br/>Silent if fmSSO<br/>session valid
+  F-->>U: SAML Response (Assertion signed for Atlassian)
+  Note over F,U: SAML assertion<br/>Issuer fmSSO<br/>Audience Atlassian<br/>TTL ~5 min single-use
+  U->>A: POST /saml/acs (assertion)
+  A-->>U: Set-Cookie ATLASSIAN_SESSION + show OAuth consent
+  Note over U,A: Atlassian session cookie<br/>Domain atlassian.com<br/>TTL org session policy<br/>Storage browser cookie jar
+  U->>A: Click Approve (scopes shown)
+  A-->>U: 302 to chatgpt.com/callback?code=XYZ
+  Note over A,U: Authorization code<br/>TTL ~60s single-use<br/>Storage URL query param
+  U->>C: Deliver code (sends CHATGPT_SESSION)
+  C->>A: POST /oauth/token (code + PKCE verifier + client_secret)
+  A-->>C: access_token + refresh_token
+  Note over A,C: Access token Bearer<br/>TTL 3600s<br/>Refresh token rotating<br/>TTL 90 days per rotation<br/>Storage ChatGPT backend vault
+  end
+
+  rect rgba(59, 109, 17, 0.08)
+  Note over U,J: PHASE 3 - Tool call at runtime (server-to-server)
+  U->>C: Prompt summarize JIRA-123 (sends CHATGPT_SESSION)
+  C->>C: Look up stored access_token
+  C->>M: POST /v1/mcp Authorization Bearer access_token
+  M->>M: Validate token (sig, cloudId, scopes)
+  M->>J: REST call as user
+  J->>J: Enforce permission scheme (AD groups)
+  J-->>M: Issue data or 403
+  M-->>C: Tool result
+  C-->>U: AI response
+  end
+
+  rect rgba(133, 79, 11, 0.08)
+  Note over C,A: PHASE 4 - Silent refresh (every ~55 min)
+  C->>A: POST /oauth/token grant_type=refresh_token
+  A-->>C: NEW access_token + NEW refresh_token
+  Note over A,C: Old refresh token invalidated<br/>Chain dies if unused 90 days<br/>or fmSSO identity revoked
+  end
