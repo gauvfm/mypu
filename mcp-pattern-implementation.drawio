@@ -1,0 +1,585 @@
+<mxfile host="app.diagrams.net" modified="2026-04-26T22:30:00.000Z" agent="MCP-Sec-Arch" version="24.7.5" type="device">
+  <diagram name="MCP Pattern · Implementation Architecture" id="mcp-pattern-impl">
+    <mxGraphModel dx="2400" dy="1500" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2200" pageHeight="1300" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="title" value="MCP Pattern · Implementation Architecture" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=22;fontStyle=1;fontColor=#232F3E;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="1500" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="subtitle" value="MCP-SEC-ARCH-001 · v1.2 · April 2026 · Spec baseline: MCP 2025-11-25 · Generic components on AWS deployment substrate" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#545B64;" vertex="1" parent="1">
+          <mxGeometry x="40" y="50" width="1500" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="zone-a" value="Zone A · Untrusted · SaaS / PaaS    (outside enterprise control)" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 4;fillColor=#FAF6F2;strokeColor=#7D3C00;strokeWidth=2;align=left;verticalAlign=top;fontSize=11;fontColor=#7D3C00;fontStyle=3;spacingLeft=10;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="40" y="100" width="500" height="1080" as="geometry"/>
+        </mxCell>
+        <mxCell id="users-buy" value="Users via SaaS&amp;#xa;(Copilot · ChatGPT · Gemini)" style="sketch=0;outlineConnect=0;fontColor=#7D3C00;gradientColor=none;fillColor=#7D3C00;strokeColor=#7D3C00;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.users;" vertex="1" parent="1">
+          <mxGeometry x="230" y="150" width="60" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="buy-frame" value="Buy agent component   (SaaS provider runtime · enterprise has zero code-level control)" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 4;fillColor=none;strokeColor=#7D3C00;strokeWidth=1.5;align=left;verticalAlign=top;fontSize=10;fontColor=#7D3C00;fontStyle=2;spacingLeft=10;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="60" y="280" width="460" height="460" as="geometry"/>
+        </mxCell>
+        <mxCell id="buy-llm" value="3rd-party LLM&amp;#xa;(GPT-4o · Claude · Gemini)&amp;#xa;SaaS-managed runtime" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF6EC;strokeColor=#7D3C00;strokeWidth=1.5;fontSize=10;fontColor=#7D3C00;fontStyle=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="90" y="320" width="180" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="buy-host" value="Buy agent host&amp;#xa;(Copilot/ChatGPT runtime)&amp;#xa;SaaS-managed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF6EC;strokeColor=#7D3C00;strokeWidth=1.5;fontSize=10;fontColor=#7D3C00;fontStyle=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="300" y="320" width="200" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="buy-mcpclient" value="MCP Client (in SaaS)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#7D3C00;strokeWidth=2;fontSize=11;fontColor=#7D3C00;fontStyle=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="90" y="420" width="410" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="buy-mcpclient-stack" value="Security stack (vendor-implemented):&amp;#xa;· Pre-registered OAuth client (no DCR)&amp;#xa;· Per-tenant client cert (mTLS)&amp;#xa;· DPoP-bound tokens (RFC 9449)&amp;#xa;· PRM discovery (RFC 9728)&amp;#xa;· OAuth 2.1 + PKCE federation to enterprise IDP" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#7D3C00;strokeWidth=2;fontSize=10;fontColor=#7D3C00;fontStyle=0;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="90" y="444" width="410" height="96" as="geometry"/>
+        </mxCell>
+        <mxCell id="buy-governance" value="Vendor governance (compensating controls):&amp;#xa;· DPA + sub-processor list on file&amp;#xa;· SOC 2 Type II / ISO 27001 attestations&amp;#xa;· HOST-* controls via vendor contract (~60% coverage)&amp;#xa;· No code-level visibility &amp;mdash; see §09 Residual Risks&amp;#xa;· Token + network edge are the only enforceable controls" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#7D3C00;strokeWidth=1;fontSize=9;fontColor=#7D3C00;fontStyle=0;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;dashed=1;dashPattern=4 3;" vertex="1" parent="1">
+          <mxGeometry x="90" y="555" width="410" height="175" as="geometry"/>
+        </mxCell>
+        <mxCell id="buy-restriction" value="&amp;#x26A0; RESTRICTED TOOL SURFACE for buy agents&amp;#xa;Read-mostly · destructive blocked · classification &amp;le; Internal&amp;#xa;Tighter rate limits · stricter response redaction · per-tenant kill switch" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE5CC;strokeColor=#7D3C00;strokeWidth=2;fontSize=10;fontColor=#7D3C00;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="60" y="770" width="460" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="zone-a-summary" value="Maps to Build vs Buy asymmetry:&amp;#xa;Buy estate has weaker host-side controls&amp;#xa;(can&amp;apos;t implement HOST-* yourself).&amp;#xa;Compensate by tightening at the gateway:&amp;#xa;AUTHZ-05, OUT-02, NET-07, IR-01." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#7D3C00;strokeWidth=1;fontSize=9;fontColor=#7D3C00;fontStyle=0;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;dashed=1;dashPattern=4 3;" vertex="1" parent="1">
+          <mxGeometry x="60" y="880" width="460" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="awscloud" value="AWS Cloud" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;container=1;pointerEvents=0;collapsible=0;recursiveResize=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_aws_cloud_alt;strokeColor=#232F3E;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#232F3E;dashed=0;" vertex="1" parent="1">
+          <mxGeometry x="560" y="100" width="1620" height="1080" as="geometry"/>
+        </mxCell>
+        <mxCell id="users-internal" value="Internal users&amp;#xa;(Build agents)" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#232F3E;strokeColor=#232F3E;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.users;" vertex="1" parent="1">
+          <mxGeometry x="660" y="1200" width="60" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="users-internal-label" value="(Corporate network · SSO via enterprise IDP)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;fontSize=9;fontColor=#545B64;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="600" y="1255" width="200" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="dmz-row-label" value="DMZ · Edge" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;fontSize=10;fontColor=#545B64;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="580" y="130" width="200" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-comp" value="Edge component &amp;mdash; WAF + Ingress Proxy" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4F6F8;strokeColor=#232F3E;strokeWidth=1.5;fontSize=11;fontColor=#232F3E;fontStyle=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="580" y="155" width="320" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-stack" value="&amp;middot; TLS 1.3 termination&amp;#xa;&amp;middot; mTLS client cert pinning&amp;#xa;&amp;middot; IP allow-list per SaaS provider&amp;#xa;&amp;middot; WAF managed rule groups&amp;#xa;&amp;middot; DDoS / L7 inspection&amp;#xa;&amp;#xa;Controls: NET-01, NET-02, IAM-AUTHN-03, CRY-01" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4F6F8;strokeColor=#232F3E;strokeWidth=1.5;fontSize=10;fontColor=#232F3E;fontStyle=0;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="580" y="179" width="320" height="161" as="geometry"/>
+        </mxCell>
+        <mxCell id="api-comp" value="API Gateway" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4F6F8;strokeColor=#232F3E;strokeWidth=1.5;fontSize=11;fontColor=#232F3E;fontStyle=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="920" y="155" width="200" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="api-stack" value="&amp;middot; JWT validation&amp;#xa;  (iss, aud, sig)&amp;#xa;&amp;middot; Coarse rate limit&amp;#xa;&amp;middot; Request validation&amp;#xa;&amp;middot; mTLS to MCP Gateway&amp;#xa;&amp;#xa;Controls: IAM-AUTHN-01" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4F6F8;strokeColor=#232F3E;strokeWidth=1.5;fontSize=10;fontColor=#232F3E;fontStyle=0;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="920" y="179" width="200" height="161" as="geometry"/>
+        </mxCell>
+        <mxCell id="idp-comp" value="IDP / Authorization Server" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4EEFF;strokeColor=#8A4FFF;strokeWidth=1.5;fontSize=11;fontColor=#8A4FFF;fontStyle=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="1140" y="155" width="320" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="idp-stack" value="&amp;middot; OAuth 2.1 + PKCE&amp;#xa;&amp;middot; OIDC Discovery 1.0&amp;#xa;&amp;middot; Token Exchange (RFC 8693)&amp;#xa;&amp;middot; DPoP issuance (RFC 9449)&amp;#xa;&amp;middot; Step-up MFA &amp;middot; Revocation (7009)&amp;#xa;&amp;middot; Pre-registered clients only&amp;#xa;&amp;#xa;Controls: IAM-AUTHN-01, 04, 05, 08, 09, 10" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4EEFF;strokeColor=#8A4FFF;strokeWidth=1.5;fontSize=10;fontColor=#8A4FFF;fontStyle=0;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="1140" y="179" width="320" height="161" as="geometry"/>
+        </mxCell>
+        <mxCell id="kms-comp" value="Key Management" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4EEFF;strokeColor=#8A4FFF;strokeWidth=1.5;fontSize=11;fontColor=#8A4FFF;fontStyle=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="1480" y="155" width="200" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="kms-stack" value="&amp;middot; FIPS 140-3 HSM&amp;#xa;&amp;middot; Envelope encryption&amp;#xa;&amp;middot; DPoP key storage&amp;#xa;&amp;middot; Audit-only access&amp;#xa;&amp;#xa;Controls: CRY-03" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4EEFF;strokeColor=#8A4FFF;strokeWidth=1.5;fontSize=10;fontColor=#8A4FFF;fontStyle=0;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="1480" y="179" width="200" height="161" as="geometry"/>
+        </mxCell>
+        <mxCell id="mesh-comp" value="Service Mesh · mTLS everywhere" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4F6F8;strokeColor=#232F3E;strokeWidth=1.5;fontSize=11;fontColor=#232F3E;fontStyle=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="1700" y="155" width="460" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="mesh-stack" value="&amp;middot; SPIFFE / SPIRE workload identity&amp;#xa;&amp;middot; SVID X.509 (TTL &amp;lt; 1h, auto-rotate)&amp;#xa;&amp;middot; mTLS on every internal hop&amp;#xa;&amp;middot; East-west deny by default; per-server NetworkPolicy&amp;#xa;&amp;middot; SDS for cert distribution&amp;#xa;&amp;#xa;Controls: IAM-AUTHN-02, IAM-AUTHN-03, NET-04" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4F6F8;strokeColor=#232F3E;strokeWidth=1.5;fontSize=10;fontColor=#232F3E;fontStyle=0;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="1700" y="179" width="460" height="161" as="geometry"/>
+        </mxCell>
+        <mxCell id="app-row-label" value="Application &amp; enforcement layer" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;fontSize=10;fontColor=#545B64;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="580" y="380" width="300" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="build-frame" value="Build agent component   (enterprise compute)" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 4;fillColor=#F8F9FA;strokeColor=#232F3E;strokeWidth=1.5;align=left;verticalAlign=top;fontSize=11;fontColor=#232F3E;fontStyle=2;spacingLeft=10;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="580" y="405" width="320" height="320" as="geometry"/>
+        </mxCell>
+        <mxCell id="mcp-host" value="MCP Host (1:1 client per server)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#1A73E8;strokeWidth=2;fontSize=11;fontColor=#1A73E8;fontStyle=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="600" y="440" width="280" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="mcp-host-stack" value="&amp;middot; OS keystore vault (Keychain/DPAPI)&amp;#xa;&amp;middot; Per-server token isolation&amp;#xa;&amp;middot; PKCE verifier never persisted&amp;#xa;&amp;middot; Provenance-tagged context&amp;#xa;&amp;middot; Sampling consent gating&amp;#xa;&amp;middot; Recursion depth cap (3)&amp;#xa;&amp;middot; mTLS client cert per workload&amp;#xa;&amp;middot; PRM discovery + DPoP proof&amp;#xa;&amp;#xa;Controls: HOST-CLI-*, HOST-VAULT-*,&amp;#xa;HOST-CTX-*, HOST-PRM-01, HOST-DPOP-01" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#1A73E8;strokeWidth=2;fontSize=10;fontColor=#1A73E8;fontStyle=0;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="600" y="464" width="280" height="240" as="geometry"/>
+        </mxCell>
+        <mxCell id="gw-frame" value="MCP Gateway · Policy Enforcement Point" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1A73E8;strokeColor=#1A73E8;strokeWidth=2;fontSize=12;fontColor=#FFFFFF;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="920" y="405" width="540" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="gw-subtitle" value="MCP-protocol-aware chokepoint &amp;middot; v1.1 spec aligned (2025-11-25)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;fontSize=10;fontColor=#1A73E8;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="920" y="433" width="540" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="gw-fn-1" value="01 OAuth 2.1 RS + PRM (RFC 9728)&amp;#xa;02 Token Exchange (RFC 8693)&amp;#xa;03 Resource Indicators (RFC 8707)&amp;#xa;04 Registry + namespace + hash verify&amp;#xa;05 Schema firewall + protocol-version&amp;#xa;06 Prompt-injection scan (input)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#1A73E8;strokeWidth=2;fontSize=10;fontColor=#1A73E8;fontStyle=0;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="920" y="455" width="270" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="gw-fn-2" value="07 PDP call + annotation policy&amp;#xa;08 Elicitation routing (form vs URL)&amp;#xa;09 Rate limit + Tasks lifecycle&amp;#xa;10 Output DLP + structuredContent&amp;#xa;11 Sampling-request mediation&amp;#xa;12 A2A boundary + audit + kill-switch" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#1A73E8;strokeWidth=2;fontSize=10;fontColor=#1A73E8;fontStyle=0;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="455" width="270" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="gw-faildesign" value="&amp;#x26A0; FAIL CLOSED: Registry, PDP, AS, DLP all required. Any unreachable &amp;rarr; deny." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEEF0;strokeColor=#DD344C;strokeWidth=2;fontSize=10;fontColor=#DD344C;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="920" y="595" width="540" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="gw-tech" value="Implementation: agentgateway / kgateway / Envoy + filter / Kong AI Gateway" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;fontSize=9;fontColor=#1A73E8;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="920" y="638" width="540" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="registry-comp" value="MCP Registry · Trust Anchor" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4EEFF;strokeColor=#8A4FFF;strokeWidth=1.5;fontSize=11;fontColor=#8A4FFF;fontStyle=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="1480" y="405" width="680" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="registry-stack" value="&amp;middot; Signed manifests (sigstore/cosign + Fulcio)&amp;#xa;&amp;middot; Reverse-DNS namespace auth (com.example/server)&amp;#xa;&amp;middot; Hash-drift detection (15-min scanner)&amp;#xa;&amp;middot; Status: approved / deprecated / revoked&amp;#xa;&amp;middot; Syncs from registry.modelcontextprotocol.io (read-only)&amp;#xa;&amp;#xa;Controls: SUP-01, 02, 04, 09" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4EEFF;strokeColor=#8A4FFF;strokeWidth=1.5;fontSize=10;fontColor=#8A4FFF;fontStyle=0;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="1480" y="429" width="680" height="132" as="geometry"/>
+        </mxCell>
+        <mxCell id="llm-pool" value="Internal LLM Pool · Model Garden" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4F6F8;strokeColor=#232F3E;strokeWidth=1.5;fontSize=11;fontColor=#232F3E;fontStyle=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="620" y="855" width="280" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="llm-pool-stack" value="&amp;middot; Per-model policy + LLM guardrails&amp;#xa;&amp;middot; No internet egress (NET-03)&amp;#xa;&amp;middot; mTLS + service account token&amp;#xa;&amp;middot; Tool-use intent emitted, not executed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4F6F8;strokeColor=#232F3E;strokeWidth=1.5;fontSize=10;fontColor=#232F3E;fontStyle=0;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="620" y="879" width="280" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="mcp-srv-a" value="MCP Server A &amp;middot; readOnlyHint" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5EE;strokeColor=#0E8F6E;strokeWidth=1.5;fontSize=11;fontColor=#0E8F6E;fontStyle=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="940" y="855" width="280" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="mcp-srv-a-stack" value="&amp;middot; OAuth Resource Server&amp;#xa;&amp;middot; PRM endpoint (/.well-known)&amp;#xa;&amp;middot; Sandbox: non-root, RO FS, seccomp&amp;#xa;&amp;middot; NetworkPolicy: zero east-west&amp;#xa;&amp;middot; SPIFFE SVID (TTL &amp;lt; 1h)&amp;#xa;&amp;middot; Tools: read-only operations&amp;#xa;&amp;#xa;Controls: RUN-01, NET-04, IAM-AUTHN-02" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5EE;strokeColor=#0E8F6E;strokeWidth=1.5;fontSize=10;fontColor=#0E8F6E;fontStyle=0;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="940" y="879" width="280" height="156" as="geometry"/>
+        </mxCell>
+        <mxCell id="mcp-srv-b" value="MCP Server B &amp;middot; destructiveHint" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#1A73E8;strokeWidth=1.5;fontSize=11;fontColor=#1A73E8;fontStyle=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="855" width="280" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="mcp-srv-b-stack" value="&amp;middot; OAuth Resource Server&amp;#xa;&amp;middot; PRM endpoint (/.well-known)&amp;#xa;&amp;middot; DPoP-bound tokens REQUIRED&amp;#xa;&amp;middot; structuredContent enforced&amp;#xa;&amp;middot; Step-up auth required&amp;#xa;&amp;middot; Tools: write/destructive ops&amp;#xa;&amp;#xa;Controls: IAM-AUTHN-10, OUT-06, AUTHZ-08, IAM-AUTHN-08" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#1A73E8;strokeWidth=1.5;fontSize=10;fontColor=#1A73E8;fontStyle=0;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="879" width="280" height="156" as="geometry"/>
+        </mxCell>
+        <mxCell id="mcp-srv-c" value="MCP Server C &amp;middot; HIGH RISK / openWorldHint" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEEF0;strokeColor=#DD344C;strokeWidth=2;fontSize=11;fontColor=#DD344C;fontStyle=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="1540" y="855" width="280" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="mcp-srv-c-stack" value="&amp;middot; TEE: Nitro Enclave / Intel TDX&amp;#xa;&amp;middot; Remote attestation REQUIRED&amp;#xa;&amp;middot; microVM (Firecracker) isolation&amp;#xa;&amp;middot; 3rd-party / untrusted code&amp;#xa;&amp;middot; Egress: backend allow-list only&amp;#xa;&amp;middot; Tools: external/untrusted calls&amp;#xa;&amp;#xa;Controls: RUN-06, NET-03, NET-04" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEEF0;strokeColor=#DD344C;strokeWidth=2;fontSize=10;fontColor=#DD344C;fontStyle=0;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="1540" y="879" width="280" height="156" as="geometry"/>
+        </mxCell>
+        <mxCell id="backend" value="Backend systems (federated apps)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4F6F8;strokeColor=#232F3E;strokeWidth=1.5;fontSize=11;fontColor=#232F3E;fontStyle=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="1840" y="855" width="280" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="backend-stack" value="&amp;middot; RDS &amp;middot; S3 &amp;middot; DynamoDB&amp;#xa;&amp;middot; Internal SaaS via PrivateLink&amp;#xa;&amp;middot; mTLS + SVID workload identity&amp;#xa;&amp;middot; User context via signed OBO header&amp;#xa;&amp;middot; Network FW for external SaaS egress&amp;#xa;&amp;middot; Row-level security where supported&amp;#xa;&amp;#xa;Controls: IAM-AUTHN-02, AUTHZ-04, NET-03" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4F6F8;strokeColor=#232F3E;strokeWidth=1.5;fontSize=10;fontColor=#232F3E;fontStyle=0;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="1840" y="879" width="280" height="156" as="geometry"/>
+        </mxCell>
+        <mxCell id="pdp-comp" value="Policy Engine · PDP" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4EEFF;strokeColor=#8A4FFF;strokeWidth=1.5;fontSize=11;fontColor=#8A4FFF;fontStyle=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="1480" y="575" width="680" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="pdp-stack" value="&amp;middot; OPA (Rego) or Cedar &amp;middot; per-request decision&amp;#xa;&amp;middot; Context: user · agent_type · tool · classification · time · device&amp;#xa;&amp;middot; Annotation-driven: readOnlyHint/destructiveHint/openWorldHint&amp;#xa;&amp;middot; SEP-1075 security annotations &amp;middot; Fail-closed if unreachable&amp;#xa;Controls: AUTHZ-02, 07, 08, 09, 10" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4EEFF;strokeColor=#8A4FFF;strokeWidth=1.5;fontSize=10;fontColor=#8A4FFF;fontStyle=0;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="1480" y="599" width="680" height="88" as="geometry"/>
+        </mxCell>
+        <mxCell id="siem-comp" value="SIEM / Observability" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE8F2;strokeColor=#E7157B;strokeWidth=1.5;fontSize=11;fontColor=#E7157B;fontStyle=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="1480" y="695" width="680" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="siem-stack" value="&amp;middot; Structured audit (OCSF) &amp;middot; OpenTelemetry traces correlated&amp;#xa;&amp;middot; UEBA anomaly detection &amp;middot; Tool-description diff alerts &amp;middot; WORM 7y retention&amp;#xa;Controls: LOG-01, 03, 05, 06; IR-01" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE8F2;strokeColor=#E7157B;strokeWidth=1.5;fontSize=10;fontColor=#E7157B;fontStyle=0;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="1480" y="719" width="680" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="vpc" value="VPC" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;container=1;pointerEvents=0;collapsible=0;recursiveResize=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_vpc;strokeColor=#248814;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#248814;dashed=0;" vertex="1" parent="1">
+          <mxGeometry x="580" y="800" width="1580" height="380" as="geometry"/>
+        </mxCell>
+        <mxCell id="subnet" value="Private subnet" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;container=1;pointerEvents=0;collapsible=0;recursiveResize=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_private_subnet;fillColor=#E6F2F8;strokeColor=#147EBA;verticalAlign=top;align=left;spacingLeft=30;fontColor=#147EBA;dashed=0;" vertex="1" parent="1">
+          <mxGeometry x="600" y="840" width="1540" height="320" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-buy-A" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;jettySize=auto;orthogonalLoop=1;strokeColor=#7D3C00;strokeWidth=2;fontSize=10;endArrow=classic;endFill=1;" edge="1" parent="1" source="users-buy" target="buy-llm">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-buy-B" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;jettySize=auto;orthogonalLoop=1;strokeColor=#7D3C00;strokeWidth=2;fontSize=10;endArrow=classic;endFill=1;" edge="1" parent="1" source="buy-llm" target="buy-host">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-buy-C" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;jettySize=auto;orthogonalLoop=1;strokeColor=#7D3C00;strokeWidth=2;fontSize=10;endArrow=classic;endFill=1;" edge="1" parent="1" source="buy-host" target="buy-mcpclient">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;jettySize=auto;orthogonalLoop=1;strokeColor=#7D3C00;strokeWidth=2;fontSize=10;endArrow=classic;endFill=1;" edge="1" parent="1" source="buy-mcpclient" target="edge-comp">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;jettySize=auto;orthogonalLoop=1;strokeColor=#232F3E;strokeWidth=2;fontSize=10;endArrow=classic;endFill=1;" edge="1" parent="1" source="users-internal" target="mcp-host">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;jettySize=auto;orthogonalLoop=1;strokeColor=#232F3E;strokeWidth=2;fontSize=10;endArrow=classic;endFill=1;" edge="1" parent="1" source="edge-comp" target="api-comp">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;jettySize=auto;orthogonalLoop=1;strokeColor=#232F3E;strokeWidth=2;fontSize=10;endArrow=classic;endFill=1;" edge="1" parent="1" source="api-comp" target="gw-frame">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;jettySize=auto;orthogonalLoop=1;strokeColor=#232F3E;strokeWidth=2;fontSize=10;endArrow=classic;endFill=1;" edge="1" parent="1" source="mcp-host" target="gw-frame">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5b" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;jettySize=auto;orthogonalLoop=1;strokeColor=#232F3E;strokeWidth=2;fontSize=10;endArrow=classic;endFill=1;" edge="1" parent="1" source="mcp-host" target="llm-pool">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;jettySize=auto;orthogonalLoop=1;strokeColor=#8A4FFF;strokeWidth=1.5;fontSize=10;endArrow=classic;endFill=1;dashed=1;dashPattern=4 3;" edge="1" parent="1" source="gw-frame" target="idp-comp">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;jettySize=auto;orthogonalLoop=1;strokeColor=#8A4FFF;strokeWidth=1.5;fontSize=10;endArrow=classic;endFill=1;dashed=1;dashPattern=4 3;" edge="1" parent="1" source="gw-frame" target="registry-comp">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e8" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;jettySize=auto;orthogonalLoop=1;strokeColor=#8A4FFF;strokeWidth=1.5;fontSize=10;endArrow=classic;endFill=1;dashed=1;dashPattern=4 3;" edge="1" parent="1" source="gw-frame" target="pdp-comp">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e9" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;jettySize=auto;orthogonalLoop=1;strokeColor=#E7157B;strokeWidth=1.5;fontSize=10;endArrow=classic;endFill=1;dashed=1;dashPattern=4 3;" edge="1" parent="1" source="gw-frame" target="siem-comp">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e10" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;jettySize=auto;orthogonalLoop=1;strokeColor=#232F3E;strokeWidth=2;fontSize=10;endArrow=classic;endFill=1;" edge="1" parent="1" source="gw-frame" target="mcp-srv-a">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e11" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;jettySize=auto;orthogonalLoop=1;strokeColor=#232F3E;strokeWidth=2;fontSize=10;endArrow=classic;endFill=1;" edge="1" parent="1" source="gw-frame" target="mcp-srv-b">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e12" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;jettySize=auto;orthogonalLoop=1;strokeColor=#DD344C;strokeWidth=2;fontSize=10;endArrow=classic;endFill=1;" edge="1" parent="1" source="gw-frame" target="mcp-srv-c">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e13a" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;jettySize=auto;orthogonalLoop=1;strokeColor=#232F3E;strokeWidth=2;fontSize=10;endArrow=classic;endFill=1;" edge="1" parent="1" source="mcp-srv-a" target="backend">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e13b" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;jettySize=auto;orthogonalLoop=1;strokeColor=#232F3E;strokeWidth=2;fontSize=10;endArrow=classic;endFill=1;" edge="1" parent="1" source="mcp-srv-b" target="backend">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e13c" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;jettySize=auto;orthogonalLoop=1;strokeColor=#232F3E;strokeWidth=2;fontSize=10;endArrow=classic;endFill=1;" edge="1" parent="1" source="mcp-srv-c" target="backend">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="nA" value="A" style="ellipse;whiteSpace=wrap;html=1;fillColor=#7D3C00;strokeColor=#7D3C00;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="290" y="343" width="22" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="nB" value="B" style="ellipse;whiteSpace=wrap;html=1;fillColor=#7D3C00;strokeColor=#7D3C00;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="343" width="22" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="nC" value="C" style="ellipse;whiteSpace=wrap;html=1;fillColor=#7D3C00;strokeColor=#7D3C00;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="393" y="401" width="22" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="n1" value="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#7D3C00;strokeColor=#7D3C00;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="545" y="460" width="22" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="n2" value="2" style="ellipse;whiteSpace=wrap;html=1;fillColor=#232F3E;strokeColor=#232F3E;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="706" y="1175" width="22" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="n3" value="3" style="ellipse;whiteSpace=wrap;html=1;fillColor=#232F3E;strokeColor=#232F3E;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="905" y="240" width="22" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="n4" value="4" style="ellipse;whiteSpace=wrap;html=1;fillColor=#232F3E;strokeColor=#232F3E;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1125" y="240" width="22" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="n5" value="5" style="ellipse;whiteSpace=wrap;html=1;fillColor=#232F3E;strokeColor=#232F3E;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="905" y="530" width="22" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="n6" value="6" style="ellipse;whiteSpace=wrap;html=1;fillColor=#8A4FFF;strokeColor=#8A4FFF;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1465" y="270" width="22" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="n7" value="7" style="ellipse;whiteSpace=wrap;html=1;fillColor=#8A4FFF;strokeColor=#8A4FFF;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1465" y="405" width="22" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="n8" value="8" style="ellipse;whiteSpace=wrap;html=1;fillColor=#8A4FFF;strokeColor=#8A4FFF;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1465" y="575" width="22" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="n9" value="9" style="ellipse;whiteSpace=wrap;html=1;fillColor=#E7157B;strokeColor=#E7157B;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1465" y="695" width="22" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="n10" value="10" style="ellipse;whiteSpace=wrap;html=1;fillColor=#232F3E;strokeColor=#232F3E;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="800" width="24" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="n11" value="11" style="ellipse;whiteSpace=wrap;html=1;fillColor=#232F3E;strokeColor=#232F3E;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1490" y="800" width="24" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="n12" value="12" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DD344C;strokeColor=#DD344C;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1790" y="800" width="24" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="n13" value="13" style="ellipse;whiteSpace=wrap;html=1;fillColor=#232F3E;strokeColor=#232F3E;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1820" y="920" width="24" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend-title" value="Legend" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#545B64;align=left;verticalAlign=top;fontSize=11;fontColor=#232F3E;fontStyle=1;spacingLeft=10;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1010" width="500" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend-content" value="&amp;#x25CF; Black solid arrows: Data plane (MCP JSON-RPC)&amp;#xa;&amp;#x25CF; Violet dashed arrows: Control plane (token, policy, registry)&amp;#xa;&amp;#x25CF; Pink dashed arrows: Audit / telemetry to SIEM&amp;#xa;&amp;#x25CF; Brown arrows: Buy/SaaS flow (untrusted origin)&amp;#xa;&amp;#x25CF; Red arrows / boxes: HIGH-RISK paths (TEE-isolated server)&amp;#xa;&amp;#xa;Numbered circles A-C: Buy-flow steps inside Zone A&amp;#xa;Numbered circles 1-13: Enterprise flow steps (see Page 2 for table)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;fontSize=10;fontColor=#232F3E;spacingLeft=10;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="50" y="1035" width="480" height="140" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="Transport controls narrative" id="mcp-pattern-flow">
+    <mxGraphModel dx="2400" dy="1500" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="p2-title" value="Numbered flow narrative · per-step controls" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=22;fontStyle=1;fontColor=#232F3E;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="1500" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-subtitle" value="Each numbered circle in Page 1 maps to a row below. Generic component names; AWS-themed deployment substrate." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#545B64;" vertex="1" parent="1">
+          <mxGeometry x="40" y="50" width="1500" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="th-id" value="#" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#232F3E;strokeColor=#232F3E;fontColor=#FFFFFF;fontSize=11;fontStyle=1;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="90" width="60" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="th-route" value="From → To" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#232F3E;strokeColor=#232F3E;fontColor=#FFFFFF;fontSize=11;fontStyle=1;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="100" y="90" width="320" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="th-proto" value="Protocol / Transport" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#232F3E;strokeColor=#232F3E;fontColor=#FFFFFF;fontSize=11;fontStyle=1;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="90" width="220" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="th-auth" value="Authentication" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#232F3E;strokeColor=#232F3E;fontColor=#FFFFFF;fontSize=11;fontStyle=1;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="90" width="240" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="th-controls" value="Controls applied" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#232F3E;strokeColor=#232F3E;fontColor=#FFFFFF;fontSize=11;fontStyle=1;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="880" y="90" width="760" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-0-1" value="A" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAF6F2;strokeColor=#D5DBDB;fontSize=11;fontStyle=1;fontColor=#7D3C00;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="126" width="60" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-0-2" value="Buy users → 3rd-party LLM" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAF6F2;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="100" y="126" width="320" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-0-3" value="(SaaS-internal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAF6F2;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="126" width="220" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-0-4" value="SaaS user session" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAF6F2;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="126" width="240" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-0-5" value="Vendor session controls only" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAF6F2;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="880" y="126" width="760" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-1-1" value="B" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAF6F2;strokeColor=#D5DBDB;fontSize=11;fontStyle=1;fontColor=#7D3C00;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="164" width="60" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-1-2" value="3rd-party LLM → Buy host" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAF6F2;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="100" y="164" width="320" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-1-3" value="(SaaS-internal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAF6F2;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="164" width="220" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-1-4" value="(SaaS-managed)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAF6F2;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="164" width="240" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-1-5" value="Outside enterprise visibility" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAF6F2;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="880" y="164" width="760" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-2-1" value="C" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAF6F2;strokeColor=#D5DBDB;fontSize=11;fontStyle=1;fontColor=#7D3C00;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="202" width="60" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-2-2" value="Buy host → MCP Client (in SaaS)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAF6F2;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="100" y="202" width="320" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-2-3" value="(SaaS-internal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAF6F2;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="202" width="220" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-2-4" value="Pre-registered OAuth client" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAF6F2;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="202" width="240" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-2-5" value="Vendor implements via DPA + attestations" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FAF6F2;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="880" y="202" width="760" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-3-1" value="0" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F4EEFF;strokeColor=#D5DBDB;fontSize=11;fontStyle=1;fontColor=#8A4FFF;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="240" width="60" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-3-2" value="User → IDP / AS (initial auth)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F4EEFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="100" y="240" width="320" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-3-3" value="HTTPS · TLS 1.3 · OIDC redirect" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F4EEFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="240" width="220" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-3-4" value="OAuth 2.1 + PKCE + MFA" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F4EEFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="240" width="240" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-3-5" value="IAM-AUTHN-01, 05, 08; HOST-UI-01" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F4EEFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="880" y="240" width="760" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-4-1" value="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=11;fontStyle=1;fontColor=#232F3E;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="278" width="60" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-4-2" value="Buy MCP Client → Edge (cross-zone)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="100" y="278" width="320" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-4-3" value="HTTP/2 or HTTP/3 · TLS 1.3" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="278" width="220" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-4-4" value="mTLS + pinned SaaS vendor cert" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="278" width="240" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-4-5" value="NET-01, NET-02, IAM-AUTHN-03, CRY-01" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="880" y="278" width="760" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-5-1" value="2" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=11;fontStyle=1;fontColor=#232F3E;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="316" width="60" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-5-2" value="Internal user → Build agent (MCP Host)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="100" y="316" width="320" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-5-3" value="HTTPS · TLS 1.3 (corp net)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="316" width="220" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-5-4" value="OAuth 2.1 + PKCE via IDP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="316" width="240" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-5-5" value="IAM-AUTHN-01, IAM-AUTHN-03, CRY-01" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="880" y="316" width="760" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-6-1" value="3" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=11;fontStyle=1;fontColor=#232F3E;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="354" width="60" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-6-2" value="Edge → API Gateway" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="100" y="354" width="320" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-6-3" value="HTTP/2 · TLS 1.3" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="354" width="220" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-6-4" value="Internal mTLS" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="354" width="240" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-6-5" value="IAM-AUTHN-03, CRY-01" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="880" y="354" width="760" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-7-1" value="4" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=11;fontStyle=1;fontColor=#232F3E;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="392" width="60" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-7-2" value="API Gateway → MCP Gateway" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="100" y="392" width="320" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-7-3" value="HTTP/2 · TLS 1.3" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="392" width="220" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-7-4" value="mTLS + Bearer JWT" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="392" width="240" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-7-5" value="IAM-AUTHN-01, IAM-AUTHN-03" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="880" y="392" width="760" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-8-1" value="5" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=11;fontStyle=1;fontColor=#232F3E;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="430" width="60" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-8-2" value="Build agent → MCP Gateway" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="100" y="430" width="320" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-8-3" value="HTTP/2 · TLS 1.3 · service mesh" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="430" width="220" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-8-4" value="mTLS (App Mesh) + Bearer JWT" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="430" width="240" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-8-5" value="IAM-AUTHN-01, 03, 04" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="880" y="430" width="760" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-9-1" value="5b" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=11;fontStyle=1;fontColor=#232F3E;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="468" width="60" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-9-2" value="Build agent → Internal LLM Pool" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="100" y="468" width="320" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-9-3" value="gRPC · TLS 1.3 · VPC endpoint" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="468" width="220" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-9-4" value="mTLS + service-account token" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="468" width="240" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-9-5" value="IAM-AUTHN-03, NET-03 (no internet egress)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="880" y="468" width="760" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-10-1" value="6" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#D5DBDB;fontSize=11;fontStyle=1;fontColor=#1A73E8;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="506" width="60" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-10-2" value="MCP Gateway ↔ IDP / AS" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="100" y="506" width="320" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-10-3" value="HTTPS · TLS 1.3" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="506" width="220" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-10-4" value="mTLS + client credentials" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="506" width="240" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-10-5" value="IAM-AUTHN-01, 04, 05, 09 (PRM), 10 (DPoP)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="880" y="506" width="760" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-11-1" value="7" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#D5DBDB;fontSize=11;fontStyle=1;fontColor=#1A73E8;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="544" width="60" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-11-2" value="MCP Gateway ↔ Registry" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="100" y="544" width="320" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-11-3" value="HTTPS · TLS 1.3" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="544" width="220" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-11-4" value="mTLS + gateway service ID" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="544" width="240" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-11-5" value="SUP-01, 02, 04, 09 (namespace auth)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="880" y="544" width="760" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-12-1" value="8" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#D5DBDB;fontSize=11;fontStyle=1;fontColor=#1A73E8;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="582" width="60" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-12-2" value="MCP Gateway ↔ PDP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="100" y="582" width="320" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-12-3" value="gRPC · TLS 1.3" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="582" width="220" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-12-4" value="mTLS (service mesh)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="582" width="240" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-12-5" value="AUTHZ-02 (PEP/PDP), 07 (deny by default), 08 (annotation), 09 (sampling), 10 (A2A)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="880" y="582" width="760" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-13-1" value="9" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCE8F2;strokeColor=#D5DBDB;fontSize=11;fontStyle=1;fontColor=#E7157B;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="620" width="60" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-13-2" value="MCP Gateway → SIEM" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCE8F2;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="100" y="620" width="320" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-13-3" value="gRPC (OTel) · TLS 1.3" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCE8F2;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="620" width="220" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-13-4" value="mTLS + collector token" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCE8F2;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="620" width="240" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-13-5" value="LOG-01, 03 (OTel), 05 (diff alert), 06 (WORM)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCE8F2;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="880" y="620" width="760" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-14-1" value="10" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=11;fontStyle=1;fontColor=#232F3E;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="658" width="60" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-14-2" value="MCP Gateway → MCP Server A (readOnly)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="100" y="658" width="320" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-14-3" value="HTTP/2 streamable · TLS 1.3" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="658" width="220" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-14-4" value="mTLS + scoped token (aud=server-A)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="658" width="240" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-14-5" value="IAM-AUTHN-04, 05, 09; AUTHZ-01; SUP-01; RUN-01; ≤15min TTL" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="880" y="658" width="760" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-15-1" value="11" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=11;fontStyle=1;fontColor=#232F3E;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="696" width="60" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-15-2" value="MCP Gateway → MCP Server B (destructive)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="100" y="696" width="320" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-15-3" value="HTTP/2 streamable · TLS 1.3" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="696" width="220" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-15-4" value="mTLS + scoped DPoP token (aud=server-B)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="696" width="240" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-15-5" value="IAM-AUTHN-08 (step-up), 10 (DPoP); OUT-06; AUTHZ-08" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="880" y="696" width="760" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-16-1" value="12" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFEEF0;strokeColor=#D5DBDB;fontSize=11;fontStyle=1;fontColor=#DD344C;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="734" width="60" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-16-2" value="MCP Gateway → MCP Server C (HIGH RISK)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFEEF0;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="100" y="734" width="320" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-16-3" value="HTTP/2 streamable · TLS 1.3" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFEEF0;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="734" width="220" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-16-4" value="mTLS + scoped DPoP + TEE attestation" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFEEF0;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="734" width="240" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-16-5" value="RUN-06 (TEE), NET-03 (egress allow-list), AUTHZ-09" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFEEF0;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="880" y="734" width="760" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-17-1" value="13" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=11;fontStyle=1;fontColor=#232F3E;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="772" width="60" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-17-2" value="MCP Server → Backend (federated app)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="100" y="772" width="320" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-17-3" value="App-dependent · TLS 1.3" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="772" width="220" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-17-4" value="SPIFFE SVID + signed OBO header" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="772" width="240" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-17-5" value="IAM-AUTHN-02 (workload ID), AUTHZ-04 (OBO)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5DBDB;fontSize=10;align=left;verticalAlign=middle;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="880" y="772" width="760" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2-footer" value="Color coding: brown rows = buy/SaaS-side (untrusted) · violet = initial auth · white = data plane · blue = control plane · pink = audit/telemetry · red = high-risk path. Control IDs reference catalog §07 (gateway/infra) and §03.2 (host/client) of MCP-SEC-ARCH-001 v1.1." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;fontSize=10;fontColor=#545B64;spacingLeft=10;spacingTop=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="830" width="1600" height="60" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
