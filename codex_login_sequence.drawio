@@ -1,0 +1,347 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Codex Local Login Sequence" id="codex-login-seq">
+    <mxGraphModel dx="1422" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="Codex Local — Sign in with ChatGPT (SAML SSO + OAuth 2.0 + PKCE)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="1320" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Lifeline boxes (top) -->
+        <mxCell id="actor-dev" value="Developer" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="60" y="70" width="140" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lane-client" value="Codex Local&#10;(CLI / IDE / app)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="260" y="70" width="160" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lane-browser" value="Browser" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="480" y="70" width="160" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lane-auth" value="auth.openai.com&#10;(OIDC AS + SAML SP)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="700" y="70" width="180" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lane-ping" value="FMSSO Ping&#10;(SAML IdP)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="940" y="70" width="160" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lane-disk" value="OS Keyring /&#10;~/.codex/auth.json" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1160" y="70" width="180" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Lifelines (dashed vertical lines) -->
+        <mxCell id="ll-dev" style="endArrow=none;dashed=1;html=1;strokeColor=#6c8ebf;strokeWidth=1.5" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130" y="110" as="sourcePoint" />
+            <mxPoint x="130" y="950" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="ll-client" style="endArrow=none;dashed=1;html=1;strokeColor=#82b366;strokeWidth=1.5" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340" y="110" as="sourcePoint" />
+            <mxPoint x="340" y="950" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="ll-browser" style="endArrow=none;dashed=1;html=1;strokeColor=#d6b656;strokeWidth=1.5" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="560" y="110" as="sourcePoint" />
+            <mxPoint x="560" y="950" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="ll-auth" style="endArrow=none;dashed=1;html=1;strokeColor=#d79b00;strokeWidth=1.5" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="790" y="110" as="sourcePoint" />
+            <mxPoint x="790" y="950" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="ll-ping" style="endArrow=none;dashed=1;html=1;strokeColor=#b85450;strokeWidth=1.5" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1020" y="110" as="sourcePoint" />
+            <mxPoint x="1020" y="950" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="ll-disk" style="endArrow=none;dashed=1;html=1;strokeColor=#9673a6;strokeWidth=1.5" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1250" y="110" as="sourcePoint" />
+            <mxPoint x="1250" y="950" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 1: Dev triggers login -->
+        <mxCell id="msg1" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=1.5" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130" y="150" as="sourcePoint" />
+            <mxPoint x="340" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg1-lbl" value="1. codex login&#10;(or click Sign in)" style="text;html=1;align=center;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="140" y="120" width="200" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Note: PKCE gen + listener bind -->
+        <mxCell id="note1" value="Generate PKCE verifier + S256 challenge&#10;Bind listener on http://localhost:1455/auth/callback" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10" vertex="1" parent="1">
+          <mxGeometry x="240" y="170" width="220" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Step 2: Client opens browser -->
+        <mxCell id="msg2" style="endArrow=classic;html=1;rounded=0;strokeWidth=1.5" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340" y="240" as="sourcePoint" />
+            <mxPoint x="560" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg2-lbl" value="2. open browser →&#10;auth.openai.com/oauth/authorize?response_type=code&#10;&amp;client_id&amp;redirect_uri=localhost:1455&amp;code_challenge&amp;state" style="text;html=1;align=center;fontSize=10" vertex="1" parent="1">
+          <mxGeometry x="345" y="210" width="350" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Step 3: Browser GET /authorize -->
+        <mxCell id="msg3" style="endArrow=classic;html=1;rounded=0;strokeWidth=1.5" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="560" y="280" as="sourcePoint" />
+            <mxPoint x="790" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg3-lbl" value="3. GET /oauth/authorize" style="text;html=1;align=center;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="565" y="255" width="225" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Note: domain lookup -->
+        <mxCell id="note2" value="Match email domain → verified SAML connection&#10;Build AuthnRequest, redirect to IdP" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10" vertex="1" parent="1">
+          <mxGeometry x="680" y="290" width="240" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Step 4: 302 to Ping -->
+        <mxCell id="msg4" style="endArrow=classic;html=1;rounded=0;strokeWidth=1.5;dashed=1" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="790" y="345" as="sourcePoint" />
+            <mxPoint x="560" y="345" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg4-lbl" value="4. 302 redirect to FMSSO Ping (SAMLRequest)" style="text;html=1;align=center;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="565" y="325" width="225" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Step 5: Browser GET Ping -->
+        <mxCell id="msg5" style="endArrow=classic;html=1;rounded=0;strokeWidth=1.5" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="560" y="385" as="sourcePoint" />
+            <mxPoint x="1020" y="385" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg5-lbl" value="5. GET /SSO?SAMLRequest=..." style="text;html=1;align=center;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="700" y="365" width="240" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Step 6: Ping returns login page -->
+        <mxCell id="msg6" style="endArrow=classic;html=1;rounded=0;strokeWidth=1.5;dashed=1" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1020" y="420" as="sourcePoint" />
+            <mxPoint x="560" y="420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg6-lbl" value="6. Corporate login page" style="text;html=1;align=center;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="700" y="400" width="240" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Step 7: User enters creds at browser -->
+        <mxCell id="msg7" style="endArrow=classic;html=1;rounded=0;strokeWidth=1.5" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130" y="455" as="sourcePoint" />
+            <mxPoint x="560" y="455" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg7-lbl" value="7. Enter corporate creds + MFA" style="text;html=1;align=center;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="200" y="435" width="320" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Step 8: Browser POST creds to Ping -->
+        <mxCell id="msg8" style="endArrow=classic;html=1;rounded=0;strokeWidth=1.5" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="560" y="490" as="sourcePoint" />
+            <mxPoint x="1020" y="490" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg8-lbl" value="8. POST credentials" style="text;html=1;align=center;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="700" y="470" width="240" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Step 9: Ping → SAMLResponse via auto-submit -->
+        <mxCell id="msg9" style="endArrow=classic;html=1;rounded=0;strokeWidth=1.5;dashed=1" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1020" y="525" as="sourcePoint" />
+            <mxPoint x="560" y="525" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg9-lbl" value="9. HTML auto-submit form with signed SAMLResponse" style="text;html=1;align=center;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="640" y="505" width="360" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Step 10: Browser POST SAMLResponse to auth -->
+        <mxCell id="msg10" style="endArrow=classic;html=1;rounded=0;strokeWidth=1.5" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="560" y="560" as="sourcePoint" />
+            <mxPoint x="790" y="560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg10-lbl" value="10. POST /saml/acs (SAMLResponse)" style="text;html=1;align=center;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="565" y="540" width="225" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Note: validate assertion -->
+        <mxCell id="note3" value="Validate signature, audience, timestamps&#10;Map SAML attributes → OIDC session" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10" vertex="1" parent="1">
+          <mxGeometry x="680" y="570" width="240" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Step 11: 302 to localhost callback with code -->
+        <mxCell id="msg11" style="endArrow=classic;html=1;rounded=0;strokeWidth=1.5;dashed=1" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="790" y="625" as="sourcePoint" />
+            <mxPoint x="560" y="625" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg11-lbl" value="11. 302 to localhost:1455/auth/callback?code=AUTH_CODE&amp;state=..." style="text;html=1;align=center;fontSize=10" vertex="1" parent="1">
+          <mxGeometry x="475" y="605" width="400" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Step 12: Browser GET to local callback -->
+        <mxCell id="msg12" style="endArrow=classic;html=1;rounded=0;strokeWidth=1.5" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="560" y="660" as="sourcePoint" />
+            <mxPoint x="340" y="660" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg12-lbl" value="12. GET /auth/callback?code=...&amp;state=..." style="text;html=1;align=center;fontSize=10" vertex="1" parent="1">
+          <mxGeometry x="345" y="640" width="225" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Note: validate state -->
+        <mxCell id="note4" value="Validate state matches what client sent (CSRF guard)" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10" vertex="1" parent="1">
+          <mxGeometry x="240" y="675" width="250" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Step 13: Client POST /oauth/token -->
+        <mxCell id="msg13" style="endArrow=classic;html=1;rounded=0;strokeWidth=1.5" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340" y="730" as="sourcePoint" />
+            <mxPoint x="790" y="730" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg13-lbl" value="13. POST /oauth/token (grant_type=authorization_code, code, code_verifier, client_id)" style="text;html=1;align=center;fontSize=10" vertex="1" parent="1">
+          <mxGeometry x="345" y="710" width="450" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Note: verify PKCE -->
+        <mxCell id="note5" value="Verify auth code + PKCE verifier hashes to original challenge" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10" vertex="1" parent="1">
+          <mxGeometry x="680" y="745" width="260" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Step 14: Return tokens -->
+        <mxCell id="msg14" style="endArrow=classic;html=1;rounded=0;strokeWidth=1.5;dashed=1" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="790" y="795" as="sourcePoint" />
+            <mxPoint x="340" y="795" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg14-lbl" value="14. id_token (JWT) + access_token (JWT) + refresh_token (opaque)" style="text;html=1;align=center;fontSize=10" vertex="1" parent="1">
+          <mxGeometry x="345" y="775" width="450" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Step 15: Store tokens -->
+        <mxCell id="msg15" style="endArrow=classic;html=1;rounded=0;strokeWidth=1.5" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340" y="835" as="sourcePoint" />
+            <mxPoint x="1250" y="835" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg15-lbl" value="15. Store tokens (keyring preferred, or ~/.codex/auth.json)" style="text;html=1;align=center;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="600" y="815" width="400" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Step 16: Client returns success to browser -->
+        <mxCell id="msg16" style="endArrow=classic;html=1;rounded=0;strokeWidth=1.5;dashed=1" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340" y="870" as="sourcePoint" />
+            <mxPoint x="560" y="870" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg16-lbl" value="16. 200 &quot;You can close this tab&quot;" style="text;html=1;align=center;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="345" y="850" width="225" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Step 17: Client → Dev: signed in -->
+        <mxCell id="msg17" style="endArrow=classic;html=1;rounded=0;strokeWidth=1.5;dashed=1" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340" y="905" as="sourcePoint" />
+            <mxPoint x="130" y="905" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg17-lbl" value="17. Signed in ✓" style="text;html=1;align=center;fontSize=11;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="140" y="885" width="200" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Bottom lifeline boxes -->
+        <mxCell id="actor-dev2" value="Developer" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="60" y="940" width="140" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lane-client2" value="Codex Local" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="260" y="940" width="160" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lane-browser2" value="Browser" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="480" y="940" width="160" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lane-auth2" value="auth.openai.com" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="700" y="940" width="180" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lane-ping2" value="FMSSO Ping" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="940" y="940" width="160" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lane-disk2" value="Keyring / auth.json" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1160" y="940" width="180" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Legend -->
+        <mxCell id="legend-bg" value="Legend" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#666666;fontSize=11;fontStyle=1;verticalAlign=top;align=left;spacingLeft=8;spacingTop=4" vertex="1" parent="1">
+          <mxGeometry x="60" y="990" width="500" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="legend1" style="endArrow=classic;html=1;rounded=0;strokeWidth=1.5" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="80" y="1015" as="sourcePoint" />
+            <mxPoint x="130" y="1015" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend1-lbl" value="solid = request" style="text;html=1;align=left;fontSize=10" vertex="1" parent="1">
+          <mxGeometry x="140" y="1005" width="120" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend2" style="endArrow=classic;html=1;rounded=0;strokeWidth=1.5;dashed=1" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="80" y="1040" as="sourcePoint" />
+            <mxPoint x="130" y="1040" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend2-lbl" value="dashed = response / redirect" style="text;html=1;align=left;fontSize=10" vertex="1" parent="1">
+          <mxGeometry x="140" y="1030" width="180" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend3" value="OAuth 2.0 Authorization Code Grant + PKCE (S256), with OIDC (openid scope)&#10;SAML SP-init handled inside the browser leg between auth.openai.com and FMSSO Ping" style="text;html=1;align=left;fontSize=10;fontStyle=2" vertex="1" parent="1">
+          <mxGeometry x="320" y="1005" width="600" height="50" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
